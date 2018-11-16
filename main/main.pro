@@ -26,8 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    textentrywidget.cpp
+    textentrywidget.cpp \
+    texteditlogger.cpp
 
 HEADERS += \
         mainwindow.h \
-    textentrywidget.h
+    textentrywidget.h \
+    texteditlogger.h

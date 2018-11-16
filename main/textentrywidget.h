@@ -4,15 +4,20 @@
 #include <QTextDocument>
 #include <QTextEdit>
 #include <QWidget>
+#include "texteditlogger.h"
 
 class TextEntryWidget : public QWidget {
 	Q_OBJECT
 	QTextEdit *m_sourceWindow;
-	QTextEdit *m_inputWindow;
+	TextEditLogger *m_inputWindow;
 	QTextDocument *m_sourceDocument;
 	QTextDocument *m_inputDocument;
+	QString m_inputString;
 
-  public:
+	void createDisplayWindow();
+	void createInputWindow();
+
+public:
 	explicit TextEntryWidget( QWidget *parent = nullptr );
 	void setText( QString newText );
 

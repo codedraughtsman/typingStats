@@ -3,16 +3,17 @@
 #include <QLayout>
 
 #include <QVBoxLayout>
-
-TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
+#include <qevent.h>
+void TextEntryWidget::createDisplayWindow(){
 	m_sourceWindow = new QTextEdit;
 	m_sourceWindow->setMinimumSize( 100, 100 );
 	m_sourceWindow->setReadOnly( true );
 	m_sourceDocument = new QTextDocument;
 	m_sourceWindow->setDocument( m_sourceDocument );
-	m_sourceDocument->setHtml( "apple	<br>ss th" );
 
-	m_inputWindow = new QTextEdit;
+}
+void TextEntryWidget::createInputWindow(){
+	m_inputWindow = new TextEditLogger;
 	m_inputDocument = new QTextDocument;
 	m_inputWindow->setMinimumSize( 100, 100 );
 	m_inputWindow->setDocument( m_inputDocument );
@@ -22,6 +23,10 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 					 QTextOption::ShowTabsAndSpaces );
 	m_sourceDocument->setDefaultTextOption( option );
 	m_inputDocument->setDefaultTextOption( option );
+}
+TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
+	createDisplayWindow();
+	createInputWindow();
 
 	QVBoxLayout *lay = new QVBoxLayout;
 	lay->addWidget( m_sourceWindow );
@@ -32,7 +37,8 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 }
 
 void TextEntryWidget::setText( QString newText ) {
-	m_sourceWindow->setText( newText );
+	m_inputString = newText;
+	checkText();
 }
 
 int myDiff( QString str1, QString str2 ) {
@@ -47,34 +53,42 @@ int myDiff( QString str1, QString str2 ) {
 	}
 	return -1;
 }
+QString colourizeText(QString text, QString colour, int startIndex=-1, int endIndex=-1){
+	if (startIndex == -1){
+		return "<span style='white-space: pre;color: " +colour+"'>"+text+"<\\span>";
+	}
+	QString beforeColour = text.left( startIndex );
+	QString inColour = text.mid( startIndex,endIndex -startIndex);
+	QString afterColour;
+	if (text.length() > endIndex){
+			afterColour = text.mid(endIndex, text.length() -endIndex );
+	}
 
+	QString outText = beforeColour;
+	outText += "<span style='white-space: pre;color:" +colour+"'>"+inColour+"<\\span>";
+	outText += afterColour;
+	return outText;
+}
 void TextEntryWidget::checkText() {
 	int firstDifference =
-		myDiff( m_sourceWindow->toPlainText(), m_inputWindow->toPlainText() );
-	qDebug() << "firstDifference: " << firstDifference;
+		myDiff( m_inputString, m_inputWindow->toPlainText() );
+
 	if ( firstDifference == -1 ) {
 		// set to good.
-		m_sourceDocument->setHtml( m_sourceWindow->toPlainText() );
+		m_sourceDocument->setHtml( colourizeText(m_inputString,"green"));
 
 	} else {
 		// set to error.
 		qDebug() << QString( "error: strings differ. %1  !== %2 " )
 						.arg( m_sourceWindow->toPlainText() )
 						.arg( m_inputWindow->toPlainText() );
-		QString newText( "%1<span style='color: red'>%2<\\span><span "
-						 "style='color: black'>%3" );
-		//		QString newText( "%1<font color='red'>%2<\\font>%3" );
-		QString inText = m_sourceWindow->toPlainText();
-		QString before = inText.left( firstDifference );
-		QString center = inText.at( firstDifference );
-		QString after = inText.right( inText.length() - 1 - firstDifference );
-		qDebug() << newText;
-		newText = newText.arg( before ).arg( center ).arg( after );
-		qDebug() << "before : " << before << "center " << center
-				 << " after: " << after << " inText.length()"
-				 << inText.length();
-		qDebug() << "html text:" << newText;
 
-		m_sourceDocument->setHtml( newText );
+		QString colouredText = colourizeText(m_inputString, "red",firstDifference,firstDifference+1);
+		QString colouredTextInput =colourizeText(m_inputWindow->toPlainText(),"red",firstDifference,firstDifference+1);
+
+		bool flag = m_inputWindow->blockSignals(true);
+		m_sourceDocument->setHtml( "<span style='white-space: pre;color:black'>" +colouredText+"<\\span>");
+		m_inputDocument->setHtml("<span style='white-space: pre;color:black'>" +colouredTextInput+"<\\span>");
+		m_inputWindow->blockSignals(flag);
 	}
 }
