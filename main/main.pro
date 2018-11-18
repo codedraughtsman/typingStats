@@ -27,9 +27,17 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     textentrywidget.cpp \
-    texteditlogger.cpp
+    texteditlogger.cpp \
+    choosetestdialog.cpp \
+    analyticsdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     textentrywidget.h \
-    texteditlogger.h
+    texteditlogger.h \
+    choosetestdialog.h \
+    analyticsdialog.h
+
+FORMS += \
+    choosetestdialog.ui \
+    analyticsdialog.ui

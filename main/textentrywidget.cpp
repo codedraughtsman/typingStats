@@ -51,6 +51,9 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 	buttonBox->addWidget(pauseButton);
 	buttonBox->addWidget(cancelButton);
 
+	connect( cancelButton, &QPushButton::released, this,
+			 &TextEntryWidget::close );
+
 	m_countDownBar = new QProgressBar;
 
 	QVBoxLayout *lay = new QVBoxLayout;
