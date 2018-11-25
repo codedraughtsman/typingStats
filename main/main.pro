@@ -29,15 +29,20 @@ SOURCES += \
     textentrywidget.cpp \
     texteditlogger.cpp \
     choosetestdialog.cpp \
-    analyticsdialog.cpp
+    analyticsdialog.cpp \
+    testmanager.cpp \
+    testdata.cpp \ 
+
 
 HEADERS += \
         mainwindow.h \
     textentrywidget.h \
     texteditlogger.h \
     choosetestdialog.h \
-    analyticsdialog.h
+    analyticsdialog.h \
+    testmanager.h \
+    testdata.h
 
 FORMS += \
     choosetestdialog.ui \
-    analyticsdialog.ui
+    analyticsdialog.ui 

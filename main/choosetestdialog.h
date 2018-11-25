@@ -7,21 +7,24 @@ namespace Ui {
 class ChooseTestDialog;
 }
 
-class ChooseTestDialog : public QDialog
-{
+class ChooseTestDialog : public QDialog {
 	Q_OBJECT
 
-public:
-	explicit ChooseTestDialog(QWidget *parent = 0);
+  public:
+	explicit ChooseTestDialog( QWidget *parent = 0 );
 	~ChooseTestDialog();
 
-private slots:
+  protected:
+	void startTest();
+  private slots:
 
 	void on_StartButton_released();
 
 	void on_cancelButton_released();
 
-private:
+	void on_testSelectionView_doubleClicked( const QModelIndex &index );
+
+  private:
 	Ui::ChooseTestDialog *ui;
 };
 
