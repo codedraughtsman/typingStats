@@ -30,6 +30,7 @@ void ChooseTestDialog::startTest( void ) {
 	tew->setWindowTitle( "typing test: " + tdata->getTitle() );
 	tew->startTest( tdata->getContents(), durationMsec );
 	tew->show();
+	close();
 }
 
 void ChooseTestDialog::on_StartButton_released() { startTest(); }
