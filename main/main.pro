@@ -32,6 +32,8 @@ SOURCES += \
     analyticsdialog.cpp \
     testmanager.cpp \
     testdata.cpp \ 
+    keyevent.cpp \
+    keylogger.cpp
 
 
 HEADERS += \
@@ -41,7 +43,9 @@ HEADERS += \
     choosetestdialog.h \
     analyticsdialog.h \
     testmanager.h \
-    testdata.h
+    testdata.h \
+    keyevent.h \
+    keylogger.h
 
 FORMS += \
     choosetestdialog.ui \

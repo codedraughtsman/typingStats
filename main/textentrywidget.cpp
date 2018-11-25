@@ -1,7 +1,8 @@
 #include "textentrywidget.h"
+
+#include "keyevent.h"
 #include <QDebug>
 #include <QLayout>
-
 #include <QEvent>
 #include <QPushButton>
 #include <QTimer>
@@ -29,17 +30,31 @@ void TextEntryWidget::createInputWindow() {
 
 void TextEntryWidget::updateCountDownBar( void ) {
 	qDebug() << "updateCountDownBar is called. elapsed time is:"
-			 << m_timeElapsed.remainingTime();
+			 << m_timeLeft.remainingTime();
 	m_countDownBar->setValue(
-		( m_testDurationMsec - m_timeElapsed.remainingTime() ) );
+		( m_testDurationMsec - m_timeLeft.remainingTime() ) );
 }
 void TextEntryWidget::startTest( QString text, double durationMsec ) {
 	qDebug() << "called startTest. duration is: " << durationMsec;
 	m_testDurationMsec = durationMsec;
 	m_countDownBar->setRange( 0, m_testDurationMsec );
-	m_timeElapsed.setRemainingTime( m_testDurationMsec );
+	m_timeLeft.setRemainingTime( m_testDurationMsec );
 	setText( text );
 }
+
+void TextEntryWidget::recordKeyEvent( KeyEvent::keyStatus keyStatus,
+									  QString keyText ) {
+	m_keyLogger.logEvent(
+		KeyEvent( keyStatus, KeyEvent::strokeType::CORRECT, keyText,
+				  m_testDurationMsec - m_timeLeft.remainingTime() ) );
+}
+void TextEntryWidget::keyPressed( QString key ) {
+	recordKeyEvent( KeyEvent::keyStatus::PRESSED, key );
+}
+void TextEntryWidget::keyReleased( QString key ) {
+	recordKeyEvent( KeyEvent::keyStatus::RELEASED, key );
+}
+
 TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 	createDisplayWindow();
 	createInputWindow();
@@ -69,6 +84,11 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 	connect( m_timer, &QTimer::timeout, this,
 			 &TextEntryWidget::updateCountDownBar );
 	m_timer->start( 500 );
+
+	connect( m_inputWindow, &TextEditLogger::keyPressed, this,
+			 &TextEntryWidget::keyPressed );
+	connect( m_inputWindow, &TextEditLogger::keyReleased, this,
+			 &TextEntryWidget::keyReleased );
 }
 
 TextEntryWidget::~TextEntryWidget() {
