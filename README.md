@@ -1,4 +1,4 @@
-# TypingStats
+# typingStats
 A statistics heavy typing tutor designed around providing detailed metrics to help increase your typing speed.
 
 This project is still under construction.<br/><br/>
