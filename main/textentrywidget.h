@@ -19,7 +19,7 @@ class TextEntryWidget : public QWidget {
 	QProgressBar *m_countDownBar;
 	QDeadlineTimer m_timeLeft;
 	double m_testDurationMsec;
-	QTimer *m_timer;
+	QTimer *m_updateProgressBarTimer;
 	KeyLogger m_keyLogger;
 
 	void createDisplayWindow();

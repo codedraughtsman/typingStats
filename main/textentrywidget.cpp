@@ -1,9 +1,10 @@
 #include "textentrywidget.h"
 
 #include "keyevent.h"
+#include "storagemanager.h"
 #include <QDebug>
-#include <QLayout>
 #include <QEvent>
+#include <QLayout>
 #include <QPushButton>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -80,10 +81,10 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 	connect( m_inputWindow, &QTextEdit::textChanged, this,
 			 &TextEntryWidget::checkText );
 
-	m_timer = new QTimer( this );
-	connect( m_timer, &QTimer::timeout, this,
+	m_updateProgressBarTimer = new QTimer( this );
+	connect( m_updateProgressBarTimer, &QTimer::timeout, this,
 			 &TextEntryWidget::updateCountDownBar );
-	m_timer->start( 500 );
+	m_updateProgressBarTimer->start( 500 );
 
 	connect( m_inputWindow, &TextEditLogger::keyPressed, this,
 			 &TextEntryWidget::keyPressed );
@@ -92,8 +93,8 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 }
 
 TextEntryWidget::~TextEntryWidget() {
-	m_timer->stop();
-	delete m_timer;
+	m_updateProgressBarTimer->stop();
+	delete m_updateProgressBarTimer;
 }
 
 void TextEntryWidget::setText( QString newText ) {
@@ -139,6 +140,10 @@ void TextEntryWidget::checkText() {
 		if ( m_inputString == m_inputWindow->toPlainText() ) {
 			qDebug() << "strings are the same.";
 			emit testFinished();
+			uint timeElapsed = m_testDurationMsec - m_timeLeft.remainingTime();
+			qDebug() << "time elapsed: " << timeElapsed;
+			storageManager().addTestResult(
+				TestResult( timeElapsed, m_keyLogger.getEvents() ) );
 			close();
 		}
 		// set to good.

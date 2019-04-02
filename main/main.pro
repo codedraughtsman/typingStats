@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +33,10 @@ SOURCES += \
     testmanager.cpp \
     testdata.cpp \ 
     keyevent.cpp \
-    keylogger.cpp
+    keylogger.cpp \
+    testresult.cpp \
+    lasttestanalyticwidget.cpp \
+    storagemanager.cpp
 
 
 HEADERS += \
@@ -45,8 +48,12 @@ HEADERS += \
     testmanager.h \
     testdata.h \
     keyevent.h \
-    keylogger.h
+    keylogger.h \
+    testresult.h \
+    lasttestanalyticwidget.h \
+    storagemanager.h
 
 FORMS += \
     choosetestdialog.ui \
-    analyticsdialog.ui 
+    analyticsdialog.ui \ 
+    lasttestanalyticwidget.ui
