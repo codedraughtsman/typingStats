@@ -15,7 +15,7 @@ class StorageManager : public QObject {
 
   public:
 	explicit StorageManager();
-	uint addTestResult( TestResult result );
+	void addTestResult( TestResult result );
 	const TestResult &getTestResult( uint uid ) const;
 
   signals:
