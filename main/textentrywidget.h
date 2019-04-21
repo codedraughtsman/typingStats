@@ -1,6 +1,7 @@
 #ifndef TEXTENTRYWIDGET_H
 #define TEXTENTRYWIDGET_H
 
+#include "abstracttextentrywidget.h"
 #include "keylogger.h"
 #include "texteditlogger.h"
 #include <QDeadlineTimer>
@@ -14,23 +15,11 @@ class TextEntryWidget : public QWidget {
 	Q_OBJECT
 
 	// widgets
-	QTextEdit *m_sourceWindow;
-	TextEditLogger *m_inputWindow;
 	QHBoxLayout *m_buttonBox;
 	QProgressBar *m_countDownBar;
-
-	// data/variables
-	QTextDocument *m_sourceDocument;
-	QTextDocument *m_inputDocument;
-	QString m_inputString;
-
-	QDeadlineTimer m_timeLeft;
-	double m_testDurationMsec;
-	QTimer *m_updateProgressBarTimer;
-	KeyLogger m_keyLogger;
+	AbstractTextEntryWidget *m_textEntryWidget;
 
 	void createDisplayWindow();
-	void createInputWindow();
 	void createButtons();
 
 	void setupLayout();
@@ -41,19 +30,15 @@ class TextEntryWidget : public QWidget {
 	~TextEntryWidget();
 	void setText( QString newText );
 
+	void endTest();
   signals:
-	void testFinished( void );
+	void testFinished( TestResult result );
 
   public slots:
-	void checkText();
 	void startTest( QString text, double durationMsec );
-	void keyReleased( QString key );
-	void keyPressed( QString key );
 
-  protected:
-	void recordKeyEvent( KeyEvent::keyStatus keyStatus, QString keyText );
   private slots:
-	void updateCountDownBar();
+	void testHasEnded( TestResult result );
 };
 
 #endif // TEXTENTRYWIDGET_H

@@ -36,7 +36,9 @@ SOURCES += \
     keylogger.cpp \
     testresult.cpp \
     lasttestanalyticwidget.cpp \
-    storagemanager.cpp
+    storagemanager.cpp \
+    abstracttextentrywidget.cpp \
+    textentryovertypewidget.cpp
 
 
 HEADERS += \
@@ -51,7 +53,9 @@ HEADERS += \
     keylogger.h \
     testresult.h \
     lasttestanalyticwidget.h \
-    storagemanager.h
+    storagemanager.h \
+    abstracttextentrywidget.h \
+    textentryovertypewidget.h
 
 FORMS += \
     choosetestdialog.ui \
