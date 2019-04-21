@@ -7,16 +7,23 @@
 #include <QProgressBar>
 #include <QTextDocument>
 #include <QTextEdit>
+#include <QVBoxLayout>
 #include <QWidget>
 
 class TextEntryWidget : public QWidget {
 	Q_OBJECT
+
+	// widgets
 	QTextEdit *m_sourceWindow;
 	TextEditLogger *m_inputWindow;
+	QHBoxLayout *m_buttonBox;
+	QProgressBar *m_countDownBar;
+
+	// data/variables
 	QTextDocument *m_sourceDocument;
 	QTextDocument *m_inputDocument;
 	QString m_inputString;
-	QProgressBar *m_countDownBar;
+
 	QDeadlineTimer m_timeLeft;
 	double m_testDurationMsec;
 	QTimer *m_updateProgressBarTimer;
@@ -24,6 +31,10 @@ class TextEntryWidget : public QWidget {
 
 	void createDisplayWindow();
 	void createInputWindow();
+	void createButtons();
+
+	void setupLayout();
+	void setupConnections();
 
   public:
 	explicit TextEntryWidget( QWidget *parent = nullptr );
@@ -32,6 +43,7 @@ class TextEntryWidget : public QWidget {
 
   signals:
 	void testFinished( void );
+
   public slots:
 	void checkText();
 	void startTest( QString text, double durationMsec );

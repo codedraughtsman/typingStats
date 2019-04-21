@@ -7,7 +7,23 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QTimer>
-#include <QVBoxLayout>
+
+TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
+	createDisplayWindow();
+	createInputWindow();
+	createButtons();
+
+	m_countDownBar = new QProgressBar;
+	m_updateProgressBarTimer = new QTimer( this );
+
+	setupLayout();
+	setupConnections();
+	m_updateProgressBarTimer->start( 500 );
+}
+TextEntryWidget::~TextEntryWidget() {
+	m_updateProgressBarTimer->stop();
+	delete m_updateProgressBarTimer;
+}
 
 void TextEntryWidget::createDisplayWindow() {
 	m_sourceWindow = new QTextEdit;
@@ -27,6 +43,38 @@ void TextEntryWidget::createInputWindow() {
 					 QTextOption::ShowTabsAndSpaces );
 	m_sourceDocument->setDefaultTextOption( option );
 	m_inputDocument->setDefaultTextOption( option );
+}
+
+void TextEntryWidget::createButtons() {
+	m_buttonBox = new QHBoxLayout;
+	QPushButton *pauseButton = new QPushButton( "pause" );
+	QPushButton *cancelButton = new QPushButton( "cancel" );
+
+	m_buttonBox->addWidget( pauseButton );
+	m_buttonBox->addWidget( cancelButton );
+
+	connect( cancelButton, &QPushButton::released, this,
+			 &TextEntryWidget::close );
+}
+
+void TextEntryWidget::setupLayout() {
+	QVBoxLayout *lay = new QVBoxLayout;
+	lay->addWidget( m_sourceWindow );
+	lay->addWidget( m_inputWindow );
+	lay->addWidget( m_countDownBar );
+	lay->addLayout( m_buttonBox );
+	setLayout( lay );
+}
+
+void TextEntryWidget::setupConnections() {
+	connect( m_inputWindow, &QTextEdit::textChanged, this,
+			 &TextEntryWidget::checkText );
+	connect( m_updateProgressBarTimer, &QTimer::timeout, this,
+			 &TextEntryWidget::updateCountDownBar );
+	connect( m_inputWindow, &TextEditLogger::keyPressed, this,
+			 &TextEntryWidget::keyPressed );
+	connect( m_inputWindow, &TextEditLogger::keyReleased, this,
+			 &TextEntryWidget::keyReleased );
 }
 
 void TextEntryWidget::updateCountDownBar( void ) {
@@ -54,47 +102,6 @@ void TextEntryWidget::keyPressed( QString key ) {
 }
 void TextEntryWidget::keyReleased( QString key ) {
 	recordKeyEvent( KeyEvent::keyStatus::RELEASED, key );
-}
-
-TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
-	createDisplayWindow();
-	createInputWindow();
-
-	QHBoxLayout *buttonBox = new QHBoxLayout;
-	QPushButton *pauseButton = new QPushButton( "pause" );
-	QPushButton *cancelButton = new QPushButton( "cancel" );
-
-	buttonBox->addWidget( pauseButton );
-	buttonBox->addWidget( cancelButton );
-
-	connect( cancelButton, &QPushButton::released, this,
-			 &TextEntryWidget::close );
-
-	m_countDownBar = new QProgressBar;
-
-	QVBoxLayout *lay = new QVBoxLayout;
-	lay->addWidget( m_sourceWindow );
-	lay->addWidget( m_inputWindow );
-	lay->addWidget( m_countDownBar );
-	lay->addLayout( buttonBox );
-	setLayout( lay );
-	connect( m_inputWindow, &QTextEdit::textChanged, this,
-			 &TextEntryWidget::checkText );
-
-	m_updateProgressBarTimer = new QTimer( this );
-	connect( m_updateProgressBarTimer, &QTimer::timeout, this,
-			 &TextEntryWidget::updateCountDownBar );
-	m_updateProgressBarTimer->start( 500 );
-
-	connect( m_inputWindow, &TextEditLogger::keyPressed, this,
-			 &TextEntryWidget::keyPressed );
-	connect( m_inputWindow, &TextEditLogger::keyReleased, this,
-			 &TextEntryWidget::keyReleased );
-}
-
-TextEntryWidget::~TextEntryWidget() {
-	m_updateProgressBarTimer->stop();
-	delete m_updateProgressBarTimer;
 }
 
 void TextEntryWidget::setText( QString newText ) {
