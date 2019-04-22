@@ -23,6 +23,7 @@ TextEntryWidget::~TextEntryWidget() {}
 
 void TextEntryWidget::createDisplayWindow() {
 	m_textEntryWidget = new TextEntryOverTypeWidget();
+	m_textEntryWidget->setMinimumSize( 400, 400 );
 }
 
 void TextEntryWidget::createButtons() {
