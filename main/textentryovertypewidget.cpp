@@ -1,8 +1,19 @@
 #include "textentryovertypewidget.h"
 
-TextEntryOverTypeWidget::TextEntryOverTypeWidget() {}
+#include <QVBoxLayout>
 
-void TextEntryOverTypeWidget::setTest( QString text, uint durationInSeconds ) {}
+TextEntryOverTypeWidget::TextEntryOverTypeWidget( QWidget *parent )
+	: AbstractTextEntryWidget( parent ) {
+	m_textEditWidget = new QTextEdit( this );
+	QVBoxLayout *lay = new QVBoxLayout;
+	lay->addWidget( m_textEditWidget );
+	setLayout( lay );
+}
+
+void TextEntryOverTypeWidget::setTest( QString text, uint durationInSeconds ) {
+	m_text = text;
+	m_textEditWidget->setText( m_text );
+}
 
 TestResult TextEntryOverTypeWidget::endTest() {}
 

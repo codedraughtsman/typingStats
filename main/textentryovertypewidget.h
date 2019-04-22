@@ -4,9 +4,15 @@
 #include "abstracttextentrywidget.h"
 #include <QObject>
 
+#include <QTextEdit>
+
 class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
+
+	QString m_text;
+	QTextEdit *m_textEditWidget;
+
   public:
-	TextEntryOverTypeWidget();
+	TextEntryOverTypeWidget( QWidget *parent = nullptr );
 
 	// AbstractTextEntryWidget interface
   public:
