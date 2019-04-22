@@ -35,7 +35,7 @@ class TextEntryWidget : public QWidget {
 	void testFinished( TestResult result );
 
   public slots:
-	void startTest( QString text, double durationMsec );
+	void startTest( QString text, uint durationInSeconds );
 
   private slots:
 	void testHasEnded( TestResult result );

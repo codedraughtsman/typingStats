@@ -22,6 +22,6 @@ void AnalyticsDialog::on_testSelectionButton_released() {
 void AnalyticsDialog::on_repeatLastTest_released() {
 	TextEntryWidget *tew = new TextEntryWidget();
 	tew->startTest( "apple tree\nthe quick brown fox junped over the lazy dog",
-					120 * 1000 );
+					120 );
 	tew->show();
 }

@@ -19,7 +19,7 @@ ChooseTestDialog::~ChooseTestDialog() { delete ui; }
 
 void ChooseTestDialog::startTest( void ) {
 	QModelIndex index = ui->testSelectionView->currentIndex();
-	double durationMsec = ui->durationTime->currentText().toInt() * 60 * 1000;
+	double durationInSec = ui->durationTime->currentText().toInt() * 60;
 
 	QModelIndex instanceIndex = ui->testSelectionView->model()->index(
 		index.row(), TestManager::INSTANCE );
@@ -28,7 +28,7 @@ void ChooseTestDialog::startTest( void ) {
 
 	TextEntryWidget *tew = new TextEntryWidget();
 	tew->setWindowTitle( "typing test: " + tdata->getTitle() );
-	tew->startTest( tdata->getContents(), durationMsec );
+	tew->startTest( tdata->getContents(), durationInSec );
 	tew->show();
 	close();
 }

@@ -52,9 +52,8 @@ void TextEntryWidget::setupConnections() {
 			 &TextEntryWidget::testHasEnded );
 }
 
-void TextEntryWidget::startTest( QString text, double durationMsec ) {
-	// TODO fix the time to uint seconds.
-	m_textEntryWidget->setTest( text, durationMsec / 1000 );
+void TextEntryWidget::startTest( QString text, uint durationInSeconds ) {
+	m_textEntryWidget->setTest( text, durationInSeconds );
 }
 
 void TextEntryWidget::testHasEnded( TestResult result ) {
