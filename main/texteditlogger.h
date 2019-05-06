@@ -7,14 +7,14 @@
 class TextEditLogger : public QTextEdit {
 	Q_OBJECT
   public:
-	TextEditLogger();
+	TextEditLogger( QWidget *parent = nullptr );
 
   protected:
 	virtual void keyPressEvent( QKeyEvent *e );
 	virtual void keyReleaseEvent( QKeyEvent *e );
   signals:
-	void keyPressed( QString key );
-	void keyReleased( QString key );
+	void keyPressed( QKeyEvent *event );
+	void keyReleased( QKeyEvent *event );
 };
 
 #endif // TEXTEDITLOGGER_H

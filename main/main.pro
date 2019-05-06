@@ -38,7 +38,8 @@ SOURCES += \
     lasttestanalyticwidget.cpp \
     storagemanager.cpp \
     abstracttextentrywidget.cpp \
-    textentryovertypewidget.cpp
+    textentryovertypewidget.cpp \
+    targettextmanager.cpp
 
 
 HEADERS += \
@@ -55,7 +56,8 @@ HEADERS += \
     lasttestanalyticwidget.h \
     storagemanager.h \
     abstracttextentrywidget.h \
-    textentryovertypewidget.h
+    textentryovertypewidget.h \
+    targettextmanager.h
 
 FORMS += \
     choosetestdialog.ui \

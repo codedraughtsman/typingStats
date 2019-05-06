@@ -2,12 +2,8 @@
 #define TEXTENTRYWIDGET_H
 
 #include "abstracttextentrywidget.h"
-#include "keylogger.h"
-#include "texteditlogger.h"
 #include <QDeadlineTimer>
 #include <QProgressBar>
-#include <QTextDocument>
-#include <QTextEdit>
 #include <QVBoxLayout>
 #include <QWidget>
 

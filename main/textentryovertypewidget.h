@@ -2,16 +2,21 @@
 #define TEXTENTRYOVERTYPEWIDGET_H
 
 #include "abstracttextentrywidget.h"
+#include "targettextmanager.h"
+#include "texteditlogger.h"
 #include <QObject>
 
 #include <QTextEdit>
 
 class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
-
+	uint m_durationInSeconds;
 	QString m_text;
-	QTextEdit *m_textEditWidget;
+	TextEditLogger *m_textEditWidget;
+
+	TargetTextManager m_targetTextManager;
 
   public:
+	// todo add default text to constructor.
 	TextEntryOverTypeWidget( QWidget *parent = nullptr );
 
 	// AbstractTextEntryWidget interface
@@ -24,7 +29,11 @@ class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
 	virtual void timePercentLeftUpdate( uint percentLeft );
 
   public slots:
-	virtual void testPause( bool shouldPause ) override;
+	virtual void testPause( bool pauseTest ) override;
+
+  private:
+	QString colourizeChunk( QString text, TextChunkStatus status );
+	void updateDisplayedText();
 };
 
 #endif // TEXTENTRYOVERTYPEWIDGET_H

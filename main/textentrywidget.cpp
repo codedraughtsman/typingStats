@@ -1,13 +1,14 @@
 #include "textentrywidget.h"
-#include "textentryovertypewidget.h"
 
-#include "keyevent.h"
-#include "storagemanager.h"
 #include <QDebug>
 #include <QEvent>
 #include <QLayout>
 #include <QPushButton>
 #include <QTimer>
+
+#include "keyevent.h"
+#include "storagemanager.h"
+#include "textentryovertypewidget.h"
 
 TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 	createDisplayWindow();
