@@ -33,7 +33,6 @@ SOURCES += \
     testmanager.cpp \
     testdata.cpp \ 
     keyevent.cpp \
-    keylogger.cpp \
     testresult.cpp \
     lasttestanalyticwidget.cpp \
     storagemanager.cpp \
@@ -51,7 +50,6 @@ HEADERS += \
     testmanager.h \
     testdata.h \
     keyevent.h \
-    keylogger.h \
     testresult.h \
     lasttestanalyticwidget.h \
     storagemanager.h \
