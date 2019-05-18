@@ -48,10 +48,14 @@ void TextEntryWidget::setupLayout() {
 }
 
 void TextEntryWidget::setupConnections() {
+	qDebug() << "TextEntryWidget::setupConnections";
 	connect( m_textEntryWidget, &AbstractTextEntryWidget::timePercentLeftUpdate,
 			 m_countDownBar, &QProgressBar::setValue );
-	connect( m_textEntryWidget, &AbstractTextEntryWidget::testFinished, this,
-			 &TextEntryWidget::testHasEnded );
+	bool ok =
+		connect( m_textEntryWidget, &AbstractTextEntryWidget::testFinished,
+				 this, &TextEntryWidget::testHasEnded );
+	qDebug() << "ok " << ok;
+	dumpObjectInfo();
 }
 
 void TextEntryWidget::startTest( QString text, uint durationInSeconds ) {
@@ -59,6 +63,9 @@ void TextEntryWidget::startTest( QString text, uint durationInSeconds ) {
 }
 
 void TextEntryWidget::testHasEnded( TestResult result ) {
+	// store results in database;
+	qDebug() << "calling TextEntryWidget::testHasEnded";
+	storageManager().addTestResult( result );
 	emit testFinished( result );
 }
 

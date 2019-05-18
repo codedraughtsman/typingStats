@@ -1,4 +1,5 @@
 #include "targettextmanager.h"
+#include <QDateTime>
 #include <QDebug>
 
 TargetTextManager::TargetTextManager( QString targetText, QObject *parent )
@@ -18,6 +19,7 @@ TextChunkStatus TargetTextManager::getTextCharStatus( uint index ) {
 	}
 	return TextChunkStatus::ERROR;
 }
+// todo cursor disapears when typing past the end of the target text.
 QList<QPair<QString, TextChunkStatus>> TargetTextManager::getTextChunks() {
 	QList<QPair<QString, TextChunkStatus>> textChunks;
 	uint overlapLength = qMin( m_targetText.length(), m_visibleText.length() );
@@ -29,7 +31,6 @@ QList<QPair<QString, TextChunkStatus>> TargetTextManager::getTextChunks() {
 		if ( lastStatus != currentStatus ) {
 			textChunks.append(
 				QPair<QString, TextChunkStatus>( text, lastStatus ) );
-			qDebug() << "appending chunk " << text;
 			text.clear();
 		}
 		text.append( m_targetText[ i ] );
@@ -45,32 +46,56 @@ QList<QPair<QString, TextChunkStatus>> TargetTextManager::getTextChunks() {
 	// text. otherwise it may crash.
 	if ( m_targetText.length() > m_visibleText.length() ) {
 		uint lengthLeft = m_targetText.length() - i;
-		qDebug() << "i" << i << ", m_targetText " << m_targetText.length();
 		textChunks.append( QPair<QString, TextChunkStatus>(
 			m_targetText.right( lengthLeft ), TextChunkStatus::UNTYPED ) );
-	} else {
+	} else if ( m_targetText.length() < m_visibleText.length() ) {
 		uint lengthLeft = m_visibleText.length() - i;
-		qDebug() << "i" << i << ", m_targetText " << m_targetText.length();
 		textChunks.append( QPair<QString, TextChunkStatus>(
 			m_visibleText.right( lengthLeft ), TextChunkStatus::ERROR ) );
-	}
+	} // else the two strings are the same lenght and nothing needs to be added.
+
 	return textChunks;
 }
 
-uint TargetTextManager::currentNumberOfMistakes() { return 1; }
-
-bool TargetTextManager::isDeleationKeyPressEvent( QKeyEvent *event ) {
-	return false;
+bool TargetTextManager::enteredTextIsValid() {
+	// todo try this shorter method.
+	// QString::compare(m_targetText, m_visibleText, Qt::CaseInsensitive);
+	uint overlapLength = qMin( m_targetText.length(), m_visibleText.length() );
+	if ( m_visibleText.length() > m_targetText.length() ) {
+		return false;
+	}
+	for ( uint i = 0; i < overlapLength; i++ ) {
+		if ( m_targetText[ i ] != m_visibleText[ i ] ) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void TargetTextManager::keyPressed( QKeyEvent *event ) {
-	if ( isDeleationKeyPressEvent( event ) ) {
-		return;
+	// todo add del key?. may not be needed since the cursor is always at the
+	// end of the text and can never delete any text.
+	// Todo remove nonprinting chars like arrow keys
+	if ( m_keyEvents.isEmpty() ) {
+		// start the timer running.
+		m_testStartTime = QDateTime::currentMSecsSinceEpoch();
+	}
+	if ( event->key() == Qt::Key_Backspace ) {
+		m_visibleText.chop( 1 );
+	} else if ( event->key() == Qt::Key_Return ) {
+		m_visibleText.append( '\n' );
 	} else {
 		m_visibleText += event->text();
 	}
+	uint timeElapsed = QDateTime::currentMSecsSinceEpoch() - m_testStartTime;
+	m_keyEvents.push_back( KeyEvent( KeyEvent::keyStatus::PRESSED,
+									 KeyEvent::strokeType::CORRECT,
+									 event->text(), timeElapsed ) );
 
 	emit textHasChanged();
+	if ( m_visibleText == m_targetText ) {
+		emit testHasFinished( m_keyEvents );
+	}
 }
 
 void TargetTextManager::keyReleased( QKeyEvent *event ) {}

@@ -34,6 +34,9 @@ class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
   private:
 	QString colourizeChunk( QString text, TextChunkStatus status );
 	void updateDisplayedText();
+	QString convertTextToHTML( QString text );
+  private slots:
+	void testHasEnded( QVector<KeyEvent> keyEvents );
 };
 
 #endif // TEXTENTRYOVERTYPEWIDGET_H

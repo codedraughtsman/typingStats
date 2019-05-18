@@ -11,6 +11,8 @@ TextEntryOverTypeWidget::TextEntryOverTypeWidget( QWidget *parent )
 
 	connect( &m_targetTextManager, &TargetTextManager::textHasChanged, this,
 			 &TextEntryOverTypeWidget::updateDisplayedText );
+	connect( &m_targetTextManager, &TargetTextManager::testHasFinished, this,
+			 &TextEntryOverTypeWidget::testHasEnded );
 
 	connect( m_textEditWidget, &TextEditLogger::keyPressed,
 			 &m_targetTextManager, &TargetTextManager::keyPressed );
@@ -24,25 +26,42 @@ void TextEntryOverTypeWidget::setTest( QString text, uint durationInSeconds ) {
 	m_targetTextManager.setTargetText( text );
 }
 
+QString TextEntryOverTypeWidget::convertTextToHTML( QString text ) {
+	return text.replace( '\n', "&crarr;<br/>" ).replace( '\t', "&rarr;" );
+}
+
+void TextEntryOverTypeWidget::testHasEnded( QVector<KeyEvent> keyEvents ) {
+	qDebug() << "TextEntryOverTypeWidget::testHasEnded";
+	TestResult result( m_durationInSeconds, keyEvents );
+	dumpObjectInfo();
+	emit testFinished( result );
+	// Todo show stats in window for this test.
+}
+
 QString TextEntryOverTypeWidget::colourizeChunk( QString text,
 												 TextChunkStatus status ) {
 	QStringList styleTags;
-	if ( status == TextChunkStatus::COMPLEATED ||
-		 status == TextChunkStatus::UNTYPED ) {
+	if ( status == TextChunkStatus::UNTYPED ) {
+		styleTags << "color:black";
+	} else if ( status == TextChunkStatus::COMPLEATED ) {
 		styleTags << "color:green";
 	} else if ( status == TextChunkStatus::ERROR ) {
 		styleTags << "color:red";
 	} else if ( status == TextChunkStatus::CURSOR ) {
-		if ( m_targetTextManager.currentNumberOfMistakes() ) {
+		if ( m_targetTextManager.enteredTextIsValid() ) {
+			styleTags << "background-color:green";
+		} else {
 			// there is at least one mistake.
 			styleTags << "background-color:red";
-		} else {
-			styleTags << "background-color:green";
 		}
+	}
+	if ( styleTags.empty() ) {
+		// need to set text color to black;
+		styleTags << "color:black";
 	}
 	QString outputTextHTML = QString( "<span style=\"%1\">%2</span>" )
 								 .arg( styleTags.join( ';' ) )
-								 .arg( text );
+								 .arg( convertTextToHTML( text ) );
 	return outputTextHTML;
 }
 
