@@ -2,6 +2,7 @@
 #define TEXTENTRYWIDGET_H
 
 #include "abstracttextentrywidget.h"
+#include "textentryovertypewidget.h"
 #include <QDeadlineTimer>
 #include <QProgressBar>
 #include <QVBoxLayout>
@@ -13,7 +14,7 @@ class TextEntryWidget : public QWidget {
 	// widgets
 	QHBoxLayout *m_buttonBox;
 	QProgressBar *m_countDownBar;
-	AbstractTextEntryWidget *m_textEntryWidget;
+	TextEntryOverTypeWidget *m_textEntryWidget;
 
 	void createDisplayWindow();
 	void createButtons();

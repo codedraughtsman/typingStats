@@ -78,7 +78,7 @@ void TextEntryOverTypeWidget::updateDisplayedText() {
 
 TestResult TextEntryOverTypeWidget::endTest() {}
 
-void TextEntryOverTypeWidget::testFinished( TestResult result ) {}
-void TextEntryOverTypeWidget::timePercentLeftUpdate( uint percentLeft ) {}
+// void TextEntryOverTypeWidget::testFinished( TestResult result ) {}
+// void TextEntryOverTypeWidget::timePercentLeftUpdate( uint percentLeft ) {}
 
 void TextEntryOverTypeWidget::testPause( bool pauseTest ) {}

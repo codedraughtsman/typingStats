@@ -17,7 +17,7 @@ class TargetTextManager : public QObject {
 
 	TextChunkStatus getTextCharStatus( uint index );
 	QVector<KeyEvent> m_keyEvents; // logs the key presses and releases.
-	uint m_testStartTime;
+	long long m_testStartTime;
 
   public:
 	explicit TargetTextManager( QString targetText = "",

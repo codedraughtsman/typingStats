@@ -19,20 +19,23 @@ class KeyEvent {
 		ANY = ( 1 << 0 ) | ( 1 << 1 )
 	};
 	enum class strokeType {
-		CORRECT = ( 1 << 0 ),
-		INCORRECT = ( 1 << 1 ),
-		BACKSPACE = ( 1 << 2 ),
-		OVERTYPE = ( 1 << 3 )
+		OVERTYPE = ( 1 << 0 ),
+		FINAL = ( 1 << 1 ),
+		LEADING_ERROR = ( 1 << 2 ),
+		ERASE = ( 1 << 3 )
 	};
 
 	KeyEvent() {}
-	KeyEvent( keyStatus status, strokeType intype, QString key,
+	KeyEvent( keyStatus status, strokeType intype, QString key, bool isCorrect,
 			  uint timeElaspedMsec );
 	keyStatus m_status;
 	strokeType m_type;
+	bool m_isCorrect;
 	QString m_key;
 	uint m_timeElaspedMsec;
-	bool isType( keyStatus status, strokeType type );
+	bool isType( keyStatus status, strokeType type, bool isCorrect );
+	QString strokeTypeToString();
+	QString keyStatusToString();
 };
 Q_DECLARE_METATYPE( KeyEvent )
 QDebug operator<<( QDebug dbg, const KeyEvent &data );

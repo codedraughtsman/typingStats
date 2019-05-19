@@ -9,6 +9,7 @@
 #include <QTextEdit>
 
 class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
+	Q_OBJECT
 	uint m_durationInSeconds;
 	QString m_text;
 	TextEditLogger *m_textEditWidget;
@@ -25,8 +26,8 @@ class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
 	TestResult endTest();
 
   signals:
-	virtual void testFinished( TestResult result ) override;
-	virtual void timePercentLeftUpdate( uint percentLeft );
+	// virtual void testFinished( TestResult result ) override;
+	// virtual void timePercentLeftUpdate( uint percentLeft );
 
   public slots:
 	virtual void testPause( bool pauseTest ) override;

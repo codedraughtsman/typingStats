@@ -60,6 +60,11 @@ QList<QPair<QString, TextChunkStatus>> TargetTextManager::getTextChunks() {
 bool TargetTextManager::enteredTextIsValid() {
 	// todo try this shorter method.
 	// QString::compare(m_targetText, m_visibleText, Qt::CaseInsensitive);
+	if ( m_visibleText.length() == 0 ) {
+		// have not entered any text yet, so it is valid.
+		return true;
+	}
+
 	uint overlapLength = qMin( m_targetText.length(), m_visibleText.length() );
 	if ( m_visibleText.length() > m_targetText.length() ) {
 		return false;
@@ -80,17 +85,41 @@ void TargetTextManager::keyPressed( QKeyEvent *event ) {
 		// start the timer running.
 		m_testStartTime = QDateTime::currentMSecsSinceEpoch();
 	}
+	bool isCorrect = false;
+	KeyEvent::strokeType strokeType;
 	if ( event->key() == Qt::Key_Backspace ) {
+		// check to see if the last entered char is incorrect.
+		// todo mark the keyEvent that is being erased as nonFinal.
+
+		// if the entered text is incorrect then backspacing is correct.
+		isCorrect = !enteredTextIsValid();
+		strokeType = KeyEvent::strokeType::ERASE;
 		m_visibleText.chop( 1 );
-	} else if ( event->key() == Qt::Key_Return ) {
-		m_visibleText.append( '\n' );
+
 	} else {
-		m_visibleText += event->text();
+
+		bool wasCorrectBeforeKey = enteredTextIsValid();
+		if ( event->key() == Qt::Key_Return ) {
+			m_visibleText.append( '\n' );
+		} else {
+			m_visibleText += event->text();
+		}
+		isCorrect = enteredTextIsValid();
+		if ( isCorrect ) {
+			strokeType = KeyEvent::strokeType::FINAL;
+		} else {
+			if ( wasCorrectBeforeKey ) {
+				strokeType = KeyEvent::strokeType::LEADING_ERROR;
+			} else {
+				strokeType = KeyEvent::strokeType::OVERTYPE;
+			}
+		}
 	}
-	uint timeElapsed = QDateTime::currentMSecsSinceEpoch() - m_testStartTime;
-	m_keyEvents.push_back( KeyEvent( KeyEvent::keyStatus::PRESSED,
-									 KeyEvent::strokeType::CORRECT,
-									 event->text(), timeElapsed ) );
+
+	long long timeElapsed =
+		QDateTime::currentMSecsSinceEpoch() - m_testStartTime;
+	m_keyEvents.push_back( KeyEvent( KeyEvent::keyStatus::PRESSED, strokeType,
+									 event->text(), isCorrect, timeElapsed ) );
 
 	emit textHasChanged();
 	if ( m_visibleText == m_targetText ) {

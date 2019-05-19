@@ -6,6 +6,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlResult>
 
 #define DIR_NAME "typingstats"
 StorageManager::StorageManager() : QObject() { init(); }
@@ -30,7 +31,7 @@ void StorageManager::createTables() {
 	QSqlQuery query;
 	bool result;
 	result = query.exec( "CREATE TABLE IF NOT EXISTS testResults "
-						 "(uid TEXT PRIMARY KEY ,"
+						 "(uid INT PRIMARY KEY ,"
 						 "startTime DATE,"
 						 "duration TEXT"
 						 ")" );
@@ -39,11 +40,11 @@ void StorageManager::createTables() {
 		qDebug() << "SqLite error:" << query.lastError().text();
 	}
 	result = query.exec( "CREATE TABLE IF NOT EXISTS keyEvents "
-						 "(eventID TEXT PRIMARY KEY ,"
+						 "(eventID TEXT,"
 						 "testID TEXT,"
 						 "timeFromStartMS INT,"
 						 "status TEXT,"
-						 "correct INT,"
+						 "isCorrect INT,"
 						 "type TEXT"
 						 ")" );
 	if ( !result ) {
@@ -51,7 +52,18 @@ void StorageManager::createTables() {
 		qDebug() << "SqLite error:" << query.lastError().text();
 	}
 }
-uint getNextUid() { return 1; }
+uint getNextUid() {
+	QSqlQuery query( "SELECT MAX(uid ) FROM testResults;" );
+	bool result = query.exec();
+	if ( !result ) {
+		qDebug() << "failed to 'SELECT MAX(uid ) FROM testResults;'";
+		qDebug() << "SqLite error:" << query.lastError().text();
+		// todo throw an error.
+	}
+	query.first();
+	uint currentID = query.value( 0 ).toUInt();
+	return currentID + 1;
+}
 
 void StorageManager::addTestResult( TestResult result ) {
 	/*m_testResults.append( result );
@@ -63,7 +75,7 @@ void StorageManager::addTestResult( TestResult result ) {
 	uint uid = getNextUid();
 	QSqlQuery query;
 	QDateTime currentTime = QDateTime::currentDateTime();
-
+	qDebug() << "uid is " << uid;
 	query.prepare( "INSERT INTO testResults (uid, startTime, Duration) "
 				   "VALUES (:uid, :startTime, :Duration )" );
 	query.bindValue( ":uid", uid );
@@ -77,33 +89,36 @@ void StorageManager::addTestResult( TestResult result ) {
 		/*QMessageBox::warning( this, "typingStats error",
 							  "failed to write testresult to sql database",
 							  QMessageBox::Ok );
-		*/ return;
+		*/ // return;
 	}
 
 	// add the key events.
 	QSqlQuery queryKeyEvents;
-	queryKeyEvents.prepare( "INSERT INTO keyEvents (uid, timeFromStartMS, "
-							"Duration, status, correct, type) "
-							"VALUES (:testID, :timeFromStartMS, :Duration, "
-							":status, :correct, :type )" );
-	for ( KeyEvent keyEvent : result.m_keyEvents ) {
-
+	queryKeyEvents.prepare( "INSERT INTO keyEvents (testID, timeFromStartMS, "
+							"status, isCorrect, type, eventID) "
+							"VALUES (:testID, :timeFromStartMS, "
+							":status, :isCorrect, :type, :eventID )" );
+	qDebug() << "inserting " << result.m_keyEvents.length() << " keyEvent";
+	for ( int i = 0; i < result.m_keyEvents.length(); i++ ) {
+		KeyEvent keyEvent = result.m_keyEvents[ i ];
 		queryKeyEvents.bindValue( ":testID", uid );
+		queryKeyEvents.bindValue( ":eventID", i );
 		queryKeyEvents.bindValue( ":timeFromStartMS",
 								  keyEvent.m_timeElaspedMsec );
-		queryKeyEvents.bindValue( ":Duration", keyEvent.m_timeElaspedMsec );
-		queryKeyEvents.bindValue( ":status", (int)keyEvent.m_status );
-		queryKeyEvents.bindValue( ":type", (int)keyEvent.m_type );
-	}
-	ok = query.exec();
-	if ( !ok ) {
-		qDebug() << "failed to write testResult to database";
-		qDebug() << "Sql query is " << query.executedQuery();
-		qDebug() << "SqLite error:" << query.lastError().text();
+		queryKeyEvents.bindValue( ":status", keyEvent.keyStatusToString() );
+		queryKeyEvents.bindValue( ":type", keyEvent.strokeTypeToString() );
+		queryKeyEvents.bindValue( ":isCorrect", keyEvent.m_isCorrect );
+
+		ok = queryKeyEvents.exec();
+		if ( !ok ) {
+			qDebug() << "failed to write the " << i
+					 << " keyEvent to  to database";
+			qDebug() << "Sql query is " << queryKeyEvents.executedQuery();
+			qDebug() << "SqLite error:" << queryKeyEvents.lastError().text();
 		/*QMessageBox::warning( this, "typingStats error",
 							  "failed to write testresult to sql database",
 							  QMessageBox::Ok );
-		*/ return;
+		*/}
 	}
 }
 const TestResult &StorageManager::getTestResult( uint uid ) const {

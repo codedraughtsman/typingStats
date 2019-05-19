@@ -20,7 +20,8 @@ class TestResult {
 	 */
 	float getWpmGross( void );
 	uint getNumberOfMatchingKeyEvents( KeyEvent::keyStatus status,
-									   KeyEvent::strokeType type );
+									   KeyEvent::strokeType type,
+									   bool isCorrect );
 };
 
 #endif // TESTRESULT_H

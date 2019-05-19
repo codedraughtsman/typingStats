@@ -18,10 +18,10 @@ void LastTestAnalyticWidget::setTestResult( TestResult result ) {
 		QString::number( m_testResult.getWpmGross(), 'f', 2 ) ) );
 	ui->TotalKeyPressesValue->setText( QString( "%1" ).arg(
 		QString::number( m_testResult.m_keyEvents.length(), 'f', 2 ) ) );
-	ui->TotalUsedSymbolsValue->setText( QString( "%1" ).arg( QString::number(
-		m_testResult.getNumberOfMatchingKeyEvents(
-			KeyEvent::keyStatus::PRESSED, KeyEvent::strokeType::CORRECT ),
-		'f', 2 ) ) );
+	// ui->TotalUsedSymbolsValue->setText( QString( "%1" ).arg( QString::number(
+	// m_testResult.getNumberOfMatchingKeyEvents(
+	//			KeyEvent::keyStatus::PRESSED, KeyEvent::strokeType::CORRECT ),
+	//	'f', 2 ) ) );
 }
 void LastTestAnalyticWidget::updateToTestResult( uint uid ) {
 	setTestResult( storageManager().getTestResult( uid ) );

@@ -18,8 +18,8 @@ class AbstractTextEntryWidget : public QWidget {
 	virtual TestResult endTest() = 0;
 
   signals:
-	virtual void testFinished( TestResult result ) = 0;
-	virtual void timePercentLeftUpdate( uint percentLeft ) = 0;
+	void testFinished( TestResult result );
+	void timePercentLeftUpdate( uint percentLeft );
 
   public slots:
 	virtual void testPause( bool shouldPause ) = 0;

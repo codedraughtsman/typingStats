@@ -23,7 +23,7 @@ TextEntryWidget::TextEntryWidget( QWidget *parent ) : QWidget( parent ) {
 TextEntryWidget::~TextEntryWidget() {}
 
 void TextEntryWidget::createDisplayWindow() {
-	m_textEntryWidget = new TextEntryOverTypeWidget();
+	m_textEntryWidget = new TextEntryOverTypeWidget( this );
 	m_textEntryWidget->setMinimumSize( 400, 400 );
 }
 
@@ -49,10 +49,10 @@ void TextEntryWidget::setupLayout() {
 
 void TextEntryWidget::setupConnections() {
 	qDebug() << "TextEntryWidget::setupConnections";
-	connect( m_textEntryWidget, &AbstractTextEntryWidget::timePercentLeftUpdate,
+	connect( m_textEntryWidget, &TextEntryOverTypeWidget::timePercentLeftUpdate,
 			 m_countDownBar, &QProgressBar::setValue );
 	bool ok =
-		connect( m_textEntryWidget, &AbstractTextEntryWidget::testFinished,
+		connect( m_textEntryWidget, &TextEntryOverTypeWidget::testFinished,
 				 this, &TextEntryWidget::testHasEnded );
 	qDebug() << "ok " << ok;
 	dumpObjectInfo();
