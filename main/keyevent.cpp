@@ -22,6 +22,7 @@ QString KeyEvent::strokeTypeToString() {
 	} else if ( m_type == strokeType::LEADING_ERROR ) {
 		return "LEADING_ERROR";
 	}
+	return "invalid strokeType";
 }
 QString KeyEvent::keyStatusToString() {
 
@@ -32,6 +33,7 @@ QString KeyEvent::keyStatusToString() {
 	} else if ( m_status == keyStatus::ANY ) {
 		return "ANY";
 	}
+	return "invalid keyStatus";
 }
 
 QDebug operator<<( QDebug dbg, const KeyEvent &data ) {
