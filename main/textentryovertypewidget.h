@@ -23,14 +23,6 @@ class TextEntryOverTypeWidget : public AbstractTextEntryWidget {
 	// AbstractTextEntryWidget interface
   public:
 	virtual void setTest( QString text, uint durationInSeconds ) override;
-	TestResult endTest();
-
-  signals:
-	// virtual void testFinished( TestResult result ) override;
-	// virtual void timePercentLeftUpdate( uint percentLeft );
-
-  public slots:
-	virtual void testPause( bool pauseTest ) override;
 
   private:
 	QString colourizeChunk( QString text, TextChunkStatus status );

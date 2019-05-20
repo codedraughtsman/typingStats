@@ -75,10 +75,3 @@ void TextEntryOverTypeWidget::updateDisplayedText() {
 	}
 	m_textEditWidget->setText( outputText );
 }
-
-TestResult TextEntryOverTypeWidget::endTest() {}
-
-// void TextEntryOverTypeWidget::testFinished( TestResult result ) {}
-// void TextEntryOverTypeWidget::timePercentLeftUpdate( uint percentLeft ) {}
-
-void TextEntryOverTypeWidget::testPause( bool pauseTest ) {}

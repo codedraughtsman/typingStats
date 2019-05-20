@@ -70,6 +70,6 @@ void TextEntryWidget::testHasEnded( TestResult result ) {
 }
 
 void TextEntryWidget::endTest() {
-	TestResult result = m_textEntryWidget->endTest();
-	emit testFinished( result );
+	// todo stop the currently running test and get the results.
+	// emit testFinished( result );
 }
