@@ -60,19 +60,27 @@
       <height>379</height>
      </rect>
     </property>
-    <widget class="QGraphicsView" name="graphicsView">
+    <widget class="LastTestAnalyticWidget" name="lastTestAnalyticWidget" native="true">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>561</width>
-       <height>192</height>
+       <x>0</x>
+       <y>0</y>
+       <width>581</width>
+       <height>131</height>
       </rect>
      </property>
     </widget>
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LastTestAnalyticWidget</class>
+   <extends>QWidget</extends>
+   <header>lasttestanalyticwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

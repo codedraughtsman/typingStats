@@ -1,47 +1,41 @@
 #ifndef TEXTENTRYWIDGET_H
 #define TEXTENTRYWIDGET_H
 
-#include "keylogger.h"
-#include "texteditlogger.h"
+#include "abstracttextentrywidget.h"
+#include "textentryovertypewidget.h"
 #include <QDeadlineTimer>
 #include <QProgressBar>
-#include <QTextDocument>
-#include <QTextEdit>
+#include <QVBoxLayout>
 #include <QWidget>
 
 class TextEntryWidget : public QWidget {
 	Q_OBJECT
-	QTextEdit *m_sourceWindow;
-	TextEditLogger *m_inputWindow;
-	QTextDocument *m_sourceDocument;
-	QTextDocument *m_inputDocument;
-	QString m_inputString;
+
+	// widgets
+	QHBoxLayout *m_buttonBox;
 	QProgressBar *m_countDownBar;
-	QDeadlineTimer m_timeLeft;
-	double m_testDurationMsec;
-	QTimer *m_timer;
-	KeyLogger m_keyLogger;
+	TextEntryOverTypeWidget *m_textEntryWidget;
 
 	void createDisplayWindow();
-	void createInputWindow();
+	void createButtons();
+
+	void setupLayout();
+	void setupConnections();
 
   public:
 	explicit TextEntryWidget( QWidget *parent = nullptr );
 	~TextEntryWidget();
 	void setText( QString newText );
 
+	void endTest();
   signals:
-	void testFinished( void );
-  public slots:
-	void checkText();
-	void startTest( QString text, double durationMsec );
-	void keyReleased( QString key );
-	void keyPressed( QString key );
+	void testFinished( TestResult result );
 
-  protected:
-	void recordKeyEvent( KeyEvent::keyStatus keyStatus, QString keyText );
+  public slots:
+	void startTest( QString text, uint durationInSeconds );
+
   private slots:
-	void updateCountDownBar();
+	void testHasEnded( TestResult result );
 };
 
 #endif // TEXTENTRYWIDGET_H
