@@ -69,7 +69,7 @@ void TextEntryOverTypeWidget::updateDisplayedText() {
 	QList<QPair<QString, TextChunkStatus>> textChunks =
 		m_targetTextManager.getTextChunks();
 	QString outputText;
-	for ( uint i = 0; i < textChunks.size(); i++ ) {
+	for ( int i = 0; i < textChunks.size(); i++ ) {
 		outputText +=
 			colourizeChunk( textChunks[ i ].first, textChunks[ i ].second );
 	}
