@@ -94,6 +94,9 @@ QChar TargetTextManager::getInlineKeyPress() {
 	return QChar();
 }
 
+long long TargetTextManager::getTimeFromTestStart() {
+	return QDateTime::currentMSecsSinceEpoch() - m_testStartTime;
+}
 void TargetTextManager::keyPressed( QKeyEvent *event ) {
 	// todo add del key?. may not be needed since the cursor is always at the
 	// end of the text and can never delete any text.
@@ -146,11 +149,9 @@ void TargetTextManager::keyPressed( QKeyEvent *event ) {
 		}
 	}
 
-	long long timeElapsed =
-		QDateTime::currentMSecsSinceEpoch() - m_testStartTime;
 	m_keyEvents.push_back( KeyEvent( KeyEvent::keyStatus::PRESSED, strokeType,
 									 keyPressed, keyExpected, keyInline,
-									 isCorrect, timeElapsed ) );
+									 isCorrect, getTimeFromTestStart() ) );
 
 	emit textHasChanged();
 	if ( m_visibleText == m_targetText ) {

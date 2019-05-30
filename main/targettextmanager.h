@@ -29,6 +29,7 @@ class TargetTextManager : public QObject {
 	bool enteredTextIsValid();
 	QChar getExpectedKeyPress();
 	QChar getInlineKeyPress();
+	long long getTimeFromTestStart();
   signals:
 	// Todo add results to this.
 	void testHasFinished( QVector<KeyEvent> );
