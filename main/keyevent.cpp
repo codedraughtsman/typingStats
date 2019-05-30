@@ -1,9 +1,11 @@
 #include "keyevent.h"
 
 KeyEvent::KeyEvent( KeyEvent::keyStatus status, KeyEvent::strokeType intype,
-					QString key, bool isCorrect, uint timeElaspedMsec )
+					QChar keyPressed, QChar keyExpected, QChar keyInline,
+					bool isCorrect, uint timeElaspedMsec )
 	: m_status( status ), m_type( intype ), m_isCorrect( isCorrect ),
-	  m_key( key ), m_timeElaspedMsec( timeElaspedMsec ) {}
+	  m_keyPressed( keyPressed ), m_keyExpected( keyExpected ),
+	  m_keyInline( keyInline ), m_timeElaspedMsec( timeElaspedMsec ) {}
 
 bool KeyEvent::isType( keyStatus status, KeyEvent::strokeType type,
 					   bool isCorrect ) {
@@ -38,7 +40,9 @@ QString KeyEvent::keyStatusToString() {
 
 QDebug operator<<( QDebug dbg, const KeyEvent &data ) {
 
-	dbg.nospace() << "KeyEvent key: " << data.m_key
+	dbg.nospace() << "KeyEvent keyPressed: " << data.m_keyPressed
+				  << ", keyExpected: " << data.m_keyExpected
+				  << ", keyInline: " << data.m_keyExpected
 				  << ", timeElapsed: " << data.m_timeElaspedMsec;
 	return dbg.maybeSpace();
 }

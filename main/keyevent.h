@@ -26,12 +26,13 @@ class KeyEvent {
 	};
 
 	KeyEvent() {}
-	KeyEvent( keyStatus status, strokeType intype, QString key, bool isCorrect,
+	KeyEvent( keyStatus status, strokeType intype, QChar keyPressed,
+			  QChar keyExpected, QChar keyInline, bool isCorrect,
 			  uint timeElaspedMsec );
 	keyStatus m_status;
 	strokeType m_type;
 	bool m_isCorrect;
-	QString m_key;
+	QChar m_keyPressed, m_keyExpected, m_keyInline;
 	uint m_timeElaspedMsec;
 	bool isType( keyStatus status, strokeType type, bool isCorrect );
 	QString strokeTypeToString();

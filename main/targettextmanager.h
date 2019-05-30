@@ -27,6 +27,8 @@ class TargetTextManager : public QObject {
 	// todo add ways of getting keystrokes and test results from class.
 
 	bool enteredTextIsValid();
+	QChar getExpectedKeyPress();
+	QChar getInlineKeyPress();
   signals:
 	// Todo add results to this.
 	void testHasFinished( QVector<KeyEvent> );

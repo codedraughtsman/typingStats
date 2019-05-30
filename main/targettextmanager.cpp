@@ -77,6 +77,23 @@ bool TargetTextManager::enteredTextIsValid() {
 	return true;
 }
 
+QChar TargetTextManager::getExpectedKeyPress() {
+	if ( enteredTextIsValid() ) {
+		return getInlineKeyPress();
+	}
+	// next key press should start deleating back to the error.
+	return QChar( Qt::Key_Backspace );
+}
+
+QChar TargetTextManager::getInlineKeyPress() {
+	if ( m_targetText.length() > m_visibleText.length() ) {
+		// have not reached the end of the target text.
+		return m_targetText.at( m_visibleText.length() );
+	}
+	// have no more inline text to type. So return an empty QChar.
+	return QChar();
+}
+
 void TargetTextManager::keyPressed( QKeyEvent *event ) {
 	// todo add del key?. may not be needed since the cursor is always at the
 	// end of the text and can never delete any text.
@@ -85,9 +102,22 @@ void TargetTextManager::keyPressed( QKeyEvent *event ) {
 		// start the timer running.
 		m_testStartTime = QDateTime::currentMSecsSinceEpoch();
 	}
+	int keyCode = event->key();
+	QChar keyPressed =
+		event->text().at( 0 ); // Cannot use QChar(keyCode) because qt
+							   // does not apply the modifers to the
+							   // char keys. (i.e. all letters are uppercase).
+	QChar keyExpected = getExpectedKeyPress(), keyInline = getInlineKeyPress();
+
+	// use the unicode value for the keyPressed if it is not an alphanumerical
+	// value.
+	if ( keyCode < Qt::Key_Space || keyCode > Qt::Key_AsciiTilde ) {
+		keyPressed = QChar( keyCode );
+	}
+
 	bool isCorrect = false;
 	KeyEvent::strokeType strokeType;
-	if ( event->key() == Qt::Key_Backspace ) {
+	if ( keyCode == Qt::Key_Backspace ) {
 		// check to see if the last entered char is incorrect.
 		// todo mark the keyEvent that is being erased as nonFinal.
 
@@ -99,10 +129,10 @@ void TargetTextManager::keyPressed( QKeyEvent *event ) {
 	} else {
 
 		bool wasCorrectBeforeKey = enteredTextIsValid();
-		if ( event->key() == Qt::Key_Return ) {
+		if ( keyCode == Qt::Key_Return ) {
 			m_visibleText.append( '\n' );
 		} else {
-			m_visibleText += event->text();
+			m_visibleText += keyPressed;
 		}
 		isCorrect = enteredTextIsValid();
 		if ( isCorrect ) {
@@ -119,7 +149,8 @@ void TargetTextManager::keyPressed( QKeyEvent *event ) {
 	long long timeElapsed =
 		QDateTime::currentMSecsSinceEpoch() - m_testStartTime;
 	m_keyEvents.push_back( KeyEvent( KeyEvent::keyStatus::PRESSED, strokeType,
-									 event->text(), isCorrect, timeElapsed ) );
+									 keyPressed, keyExpected, keyInline,
+									 isCorrect, timeElapsed ) );
 
 	emit textHasChanged();
 	if ( m_visibleText == m_targetText ) {
