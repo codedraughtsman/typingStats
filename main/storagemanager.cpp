@@ -44,6 +44,9 @@ void StorageManager::createTables() {
 						 "testID TEXT,"
 						 "timeFromStartMS INT,"
 						 "status TEXT,"
+						 "keyPressed TEXT,"
+						 "keyExpected TEXT,"
+						 "keyInline TEXT,"
 						 "isCorrect INT,"
 						 "type TEXT"
 						 ")" );
@@ -94,10 +97,12 @@ void StorageManager::addTestResult( TestResult result ) {
 
 	// add the key events.
 	QSqlQuery queryKeyEvents;
-	queryKeyEvents.prepare( "INSERT INTO keyEvents (testID, timeFromStartMS, "
-							"status, isCorrect, type, eventID) "
-							"VALUES (:testID, :timeFromStartMS, "
-							":status, :isCorrect, :type, :eventID )" );
+	queryKeyEvents.prepare(
+		"INSERT INTO keyEvents (testID, timeFromStartMS, "
+		"status, isCorrect, type, eventID, keyPressed, keyExpected, keyInline) "
+		"VALUES (:testID, :timeFromStartMS, "
+		":status, :isCorrect, :type, :eventID, :keyPressed, :keyExpected, "
+		":keyInline )" );
 	qDebug() << "inserting " << result.m_keyEvents.length() << " keyEvent";
 	for ( int i = 0; i < result.m_keyEvents.length(); i++ ) {
 		KeyEvent keyEvent = result.m_keyEvents[ i ];
@@ -108,6 +113,9 @@ void StorageManager::addTestResult( TestResult result ) {
 		queryKeyEvents.bindValue( ":status", keyEvent.keyStatusToString() );
 		queryKeyEvents.bindValue( ":type", keyEvent.strokeTypeToString() );
 		queryKeyEvents.bindValue( ":isCorrect", keyEvent.m_isCorrect );
+		queryKeyEvents.bindValue( ":keyPressed", keyEvent.m_keyPressed );
+		queryKeyEvents.bindValue( ":keyExpected", keyEvent.m_keyExpected );
+		queryKeyEvents.bindValue( ":keyInline", keyEvent.m_keyInline );
 
 		ok = queryKeyEvents.exec();
 		if ( !ok ) {
