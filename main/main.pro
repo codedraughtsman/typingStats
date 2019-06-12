@@ -25,7 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
+    mainwidget.cpp \
         mainwindow.cpp \
+    testeditorwidget.cpp \
     textentrywidget.cpp \
     texteditlogger.cpp \
     choosetestdialog.cpp \
@@ -42,7 +44,9 @@ SOURCES += \
 
 
 HEADERS += \
+    mainwidget.h \
         mainwindow.h \
+    testeditorwidget.h \
     textentrywidget.h \
     texteditlogger.h \
     choosetestdialog.h \
@@ -59,5 +63,7 @@ HEADERS += \
 
 FORMS += \
     choosetestdialog.ui \
-    analyticsdialog.ui \ 
-    lasttestanalyticwidget.ui
+    analyticsdialog.ui \
+    mainwidget.ui \
+    lasttestanalyticwidget.ui \
+    testeditorwidget.ui

@@ -7,9 +7,6 @@
 AnalyticsDialog::AnalyticsDialog( QWidget *parent )
 	: QDialog( parent ), ui( new Ui::AnalyticsDialog ) {
 	ui->setupUi( this );
-	connect( &storageManager(), &StorageManager::testResultAdded,
-			 ui->lastTestAnalyticWidget,
-			 &LastTestAnalyticWidget::updateToTestResult );
 }
 
 AnalyticsDialog::~AnalyticsDialog() { delete ui; }
